@@ -2,12 +2,12 @@
   "name": "front-citatheque",
   "version": "0.0.0",
   "scripts": {
-    "ng": "ng",
-    "start": "ng serve",
-    "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "lint": "ng lint",
+    "ng": "cd front-citatheque ng",
+    "start": "cd front-citatheque ng serve",
+    "build": "cd front-citatheque ng build",
+    "watch": "cd front-citatheque ng build --watch --configuration development",
+    "test": "cd front-citatheque ng test",
+    "lint": "cd front-citatheque ng lint --fix",
     "prepare": "cd .. && husky install front-citatheque/.husky"
   },
   "private": true,
