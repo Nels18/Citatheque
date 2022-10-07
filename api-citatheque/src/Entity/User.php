@@ -33,9 +33,17 @@ class User
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Report::class)]
     private $reports;
 
+    #[ORM\ManyToMany(targetEntity: Quote::class, mappedBy: 'user')]
+    private $quotes;
+
+    #[ORM\OneToMany(mappedBy: 'created_by', targetEntity: Quote::class)]
+    private $created_quotes;
+
     public function __construct()
     {
         $this->reports = new ArrayCollection();
+        $this->quotes = new ArrayCollection();
+        $this->created_quotes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -127,6 +135,63 @@ class User
             // set the owning side to null (unless already changed)
             if ($report->getUser() === $this) {
                 $report->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Quote[]
+     */
+    public function getQuotes(): Collection
+    {
+        return $this->quotes;
+    }
+
+    public function addQuote(Quote $quote): self
+    {
+        if (!$this->quotes->contains($quote)) {
+            $this->quotes[] = $quote;
+            $quote->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeQuote(Quote $quote): self
+    {
+        if ($this->quotes->removeElement($quote)) {
+            $quote->removeUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Quote[]
+     */
+    public function getCreatedQuotes(): Collection
+    {
+        return $this->created_quotes;
+    }
+
+    public function addCreatedQuote(Quote $createdQuote): self
+    {
+        if (!$this->created_quotes->contains($createdQuote)) {
+            $this->created_quotes[] = $createdQuote;
+            $createdQuote->setCreatedBy($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCreatedQuote(Quote $createdQuote): self
+    {
+        if ($this->created_quotes->removeElement($createdQuote)) {
+            // set the owning side to null (unless already changed)
+            if ($createdQuote->getCreatedBy() === $this) {
+                $createdQuote->setCreatedBy(null);
             }
         }
 

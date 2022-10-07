@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\QuoteRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: QuoteRepository::class)]
@@ -29,6 +31,18 @@ class Quote
     #[ORM\ManyToOne(targetEntity: Category::class, inversedBy: 'quotes')]
     #[ORM\JoinColumn(nullable: false)]
     private $category;
+
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'quotes')]
+    private $user;
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'created_quotes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private $created_by;
+
+    public function __construct()
+    {
+        $this->user = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -91,6 +105,42 @@ class Quote
     public function setCategory(?Category $category): self
     {
         $this->category = $category;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|User[]
+     */
+    public function getUser(): Collection
+    {
+        return $this->user;
+    }
+
+    public function addUser(User $user): self
+    {
+        if (!$this->user->contains($user)) {
+            $this->user[] = $user;
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): self
+    {
+        $this->user->removeElement($user);
+
+        return $this;
+    }
+
+    public function getCreatedBy(): ?User
+    {
+        return $this->created_by;
+    }
+
+    public function setCreatedBy(?User $created_by): self
+    {
+        $this->created_by = $created_by;
 
         return $this;
     }
