@@ -2,12 +2,23 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\AuthorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: AuthorRepository::class)]
+#[ApiResource(
+    collectionOperations: [
+        'get',
+        'post'
+    ],
+    itemOperations: [
+        'get',
+        'put'
+    ]
+)]
 class Author
 {
     #[ORM\Id]
@@ -27,7 +38,7 @@ class Author
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'author_id', targetEntity: Quote::class)]
+    #[ORM\OneToMany(mappedBy: 'author', targetEntity: Quote::class)]
     private $quotes;
 
     public function __construct()

@@ -2,12 +2,21 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CategoryRepository::class)]
+#[ApiResource(
+    collectionOperations: [
+        'get'
+    ],
+    itemOperations: [
+        'get'
+    ]
+)]
 class Category
 {
     #[ORM\Id]
@@ -24,7 +33,7 @@ class Category
     #[ORM\Column(type: 'datetime_immutable', nullable: true)]
     private $updatedAt;
 
-    #[ORM\OneToMany(mappedBy: 'category_id', targetEntity: Quote::class)]
+    #[ORM\OneToMany(mappedBy: 'category', targetEntity: Quote::class)]
     private $quotes;
 
     public function __construct()

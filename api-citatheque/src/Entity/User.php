@@ -6,8 +6,19 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use ApiPlatform\Core\Annotation\ApiResource;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ApiResource(
+    collectionOperations: [
+        'get',
+        'post'
+    ],
+    itemOperations: [
+        'get',
+        'put'
+    ]
+)]
 class User
 {
     #[ORM\Id]
@@ -33,17 +44,9 @@ class User
     #[ORM\OneToMany(mappedBy: 'user', targetEntity: Report::class)]
     private $reports;
 
-    #[ORM\ManyToMany(targetEntity: Quote::class, mappedBy: 'user')]
-    private $quotes;
-
-    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Quote::class)]
-    private $createdQuotes;
-
     public function __construct()
     {
         $this->reports = new ArrayCollection();
-        $this->quotes = new ArrayCollection();
-        $this->createdQuotes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -135,63 +138,6 @@ class User
             // set the owning side to null (unless already changed)
             if ($report->getUser() === $this) {
                 $report->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Quote[]
-     */
-    public function getQuotes(): Collection
-    {
-        return $this->quotes;
-    }
-
-    public function addQuote(Quote $quote): self
-    {
-        if (!$this->quotes->contains($quote)) {
-            $this->quotes[] = $quote;
-            $quote->addUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeQuote(Quote $quote): self
-    {
-        if ($this->quotes->removeElement($quote)) {
-            $quote->removeUser($this);
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Quote[]
-     */
-    public function getCreatedQuotes(): Collection
-    {
-        return $this->createdQuotes;
-    }
-
-    public function addCreatedQuote(Quote $createdQuote): self
-    {
-        if (!$this->createdQuotes->contains($createdQuote)) {
-            $this->createdQuotes[] = $createdQuote;
-            $createdQuote->setCreatedBy($this);
-        }
-
-        return $this;
-    }
-
-    public function removeCreatedQuote(Quote $createdQuote): self
-    {
-        if ($this->createdQuotes->removeElement($createdQuote)) {
-            // set the owning side to null (unless already changed)
-            if ($createdQuote->getCreatedBy() === $this) {
-                $createdQuote->setCreatedBy(null);
             }
         }
 
