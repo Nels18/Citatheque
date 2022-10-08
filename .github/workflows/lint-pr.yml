@@ -5,6 +5,10 @@ on:
     branches:
       - develop
 
+      - back-pre-dev
+
+      - front-pre-dev
+
 jobs:
   lint-run:
     runs-on: ubuntu-latest
@@ -19,7 +23,7 @@ jobs:
 
       - name: Install dependencies
 
-        run: cd front-citatheque && npm  ci
+        run: cd front-citatheque && npm ci
 
       - name: Lint code
 
