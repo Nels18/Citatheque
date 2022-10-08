@@ -35,9 +35,9 @@ class Quote
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'quotes')]
     private $user;
 
-    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'created_quotes')]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'createdQuotes')]
     #[ORM\JoinColumn(nullable: false)]
-    private $created_by;
+    private $createdBy;
 
     public function __construct()
     {
@@ -135,12 +135,12 @@ class Quote
 
     public function getCreatedBy(): ?User
     {
-        return $this->created_by;
+        return $this->createdBy;
     }
 
-    public function setCreatedBy(?User $created_by): self
+    public function setCreatedBy(?User $createdBy): self
     {
-        $this->created_by = $created_by;
+        $this->createdBy = $createdBy;
 
         return $this;
     }

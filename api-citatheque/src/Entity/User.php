@@ -36,14 +36,14 @@ class User
     #[ORM\ManyToMany(targetEntity: Quote::class, mappedBy: 'user')]
     private $quotes;
 
-    #[ORM\OneToMany(mappedBy: 'created_by', targetEntity: Quote::class)]
-    private $created_quotes;
+    #[ORM\OneToMany(mappedBy: 'createdBy', targetEntity: Quote::class)]
+    private $createdQuotes;
 
     public function __construct()
     {
         $this->reports = new ArrayCollection();
         $this->quotes = new ArrayCollection();
-        $this->created_quotes = new ArrayCollection();
+        $this->createdQuotes = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -173,13 +173,13 @@ class User
      */
     public function getCreatedQuotes(): Collection
     {
-        return $this->created_quotes;
+        return $this->createdQuotes;
     }
 
     public function addCreatedQuote(Quote $createdQuote): self
     {
-        if (!$this->created_quotes->contains($createdQuote)) {
-            $this->created_quotes[] = $createdQuote;
+        if (!$this->createdQuotes->contains($createdQuote)) {
+            $this->createdQuotes[] = $createdQuote;
             $createdQuote->setCreatedBy($this);
         }
 
@@ -188,7 +188,7 @@ class User
 
     public function removeCreatedQuote(Quote $createdQuote): self
     {
-        if ($this->created_quotes->removeElement($createdQuote)) {
+        if ($this->createdQuotes->removeElement($createdQuote)) {
             // set the owning side to null (unless already changed)
             if ($createdQuote->getCreatedBy() === $this) {
                 $createdQuote->setCreatedBy(null);
